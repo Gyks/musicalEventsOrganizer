@@ -3,3 +3,5 @@
 .DS_Store
 .settings.py
 .settings.pyc
+# ignore python venv folder
+env/
