@@ -17,4 +17,7 @@ urlpatterns = [
     path(api_prefix + 'contract/detail/<int:pk>', ContractDetailView.as_view()),
     path(api_prefix + 'ticket/detail/<int:pk>', TicketDetailView.as_view()),
     path(api_prefix + 'ticket/create', TicketCreateView.as_view()),
+    path(api_prefix + 'get_seat_types/<int:event_place_id>', views.event_place_seat_type),
+    path(api_prefix + 'create_tickets', views.create_tickets),
+    path('', views.index),
 ]

@@ -2,6 +2,10 @@ from django.shortcuts import render
 from rest_framework import generics
 from web_api.serializers import *
 from web_api.models import EventPlace, EventPlaceSeatType, Contract, Ticket
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 class EventPlaceCreateView(generics.CreateAPIView):
     serializer_class = EventPlaceDetailSerializer
@@ -46,3 +50,9 @@ class TicketCreateView(generics.CreateAPIView):
 class TicketDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TicketDetailSerializer
     queryset = Ticket.objects.all()
+
+
+def index(request):
+    latest_contracts_list = Contract.objects.all().order_by('-created')[0:5]
+    context = {'latest_contracts_list': latest_contracts_list}
+    return render(request, 'index.html', context)
