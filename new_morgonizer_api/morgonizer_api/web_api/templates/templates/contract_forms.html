@@ -1,0 +1,152 @@
+{% extends 'admin/change_form.html' %}
+{% block after_related_objects  %}
+<h1 id='tickets_header'>Тираж билетов</h1>
+<div class="modal">
+  <p>Успешное добавление билетов!</p>
+</div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+  <script>
+  $(document).ready(function(){
+    let id_list = [];
+    let number_list = [];
+    let expenses = Number($("#id_expenses").val());
+    let profit = Number($("#id_estimated_profit").val());
+    let earnings = profit - expenses;
+    let pathname = window.location.pathname;
+    let re = /\d+/;
+    let found = pathname.match(re);
+    if (found === null) {
+      console.log(found)
+      $("#get_event_places").hide();
+      $("#tickets_header").hide();
+    }
+    $("#get_event_places").click(function(){
+      let a = document.getElementById("id_event_place");
+      let result;
+      let ar = $.ajax({
+        dataType: "json",
+        url: `/api/v1/get_seat_types/${a.options[a.selectedIndex].value}`,
+        data: "",
+      }).done(function() {
+            $( "#tickets_panel" ).empty()
+            id_list = [];
+            number_list = [];
+              if (ar.responseJSON.seat_types.length === 0) {
+                $( "#tickets_panel" ).append(`Ещё нет типов мест`)
+              }
+              $.each( ar.responseJSON.seat_types, function(id, item) {
+                id_list.push(item.id);
+                number_list.push(item.capacity);
+                $( "#tickets_panel" ).append( 
+                  `<div style='margin 10px; padding-top: 5px; border-top: 1px solid #eee'>
+                  <h1 style='font-size: 16px;'> Места - "${item.name}" </h1>
+                  <div <div clas="form-row cost">
+                    <label class="required" for="${item.id}ticket_cost">Стоимость билетов:             </label>
+                    <input type="number" name="${item.id}ticket_cost" step="any" required="" id="${item.id}ticket_cost">
+                  </div></div>
+                  <div <div clas="form-row ticket_number">
+                    <label class="required" for="${item.id}ticket_number">Кол-во билетов макс(${item.capacity}): </label>
+                    <input type="number" name="${item.id}ticket_number" step="1" required="" id="${item.id}ticket_number">
+                  </div>
+                  Процент мест: <input id="${item.id}" type="number" min="1" max="100"> <br> Коэф: <input min="1" max="500" id="coeff${item.id}" type="number"> <span id='span${item.id}'></span>
+                  </div></div>` 
+            );
+          });
+          $( "#tickets_panel" ).append(  `<div style='
+        color: #fff;
+        width: 175px; 
+        heigth: 60px; 
+        cursor: pointer; 
+        margin: 10px;
+        margin-left: 0px;
+        text-align: center; 
+        font-size: 14px;
+        background: #79aec8;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;' id='submit_tickets'> Добавить билеты </div>`)
+                $( "#tickets_panel" ).append(  `<div style='
+        color: #fff;
+        width: 175px; 
+        heigth: 60px; 
+        cursor: pointer; 
+        margin: 10px;
+        margin-left: 0px;
+        text-align: center; 
+        font-size: 14px;
+        background: #79aec8;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;' id='checkData'> Посчитать </div>`)
+        
+       });
+          let coeff_list = [];
+              $(document).on("click", "#checkData", function() {
+                  $.each(id_list, function(i, id) {
+                      let tmp = $(`#${id}`);
+                      let tmp_coeff = $(`#coeff${id}`);
+                      if (tmp.val() === "" || Number(tmp.val() > 100)) {
+                          tmp.val(100);
+                      }
+                      if (tmp_coeff.val() === "") {
+                          tmp_coeff.val(1);
+                      }
+                      console.log(tmp.val());
+                      coeff_list.push(Number(tmp_coeff.val()));
+                  });
+                  $.each(id_list, function(i, id) {
+                      let tmp = $(`#${id}`);
+                      number_list[i] = Math.ceil(number_list[i] * (Number(tmp.val()) / 100));
+                  });
+                  let sum = 0;
+                  $.each(id_list, function(i, id) {
+                      sum += coeff_list[i] * number_list[i];
+                  });
+                  $.each(id_list, function(i, id) {
+                      let to_add = earnings / sum * coeff_list[i];
+                      $(`#span${id}`).text(`Рекомендованная цена за билет - ${to_add}`);
+                  });
+              });
+      });
+    $( document ).on( "click", "#submit_tickets", function() {
+        console.log(`contract ${found[0]}`)
+        $.each( id_list, function(i, id) {
+          $.ajax({
+                url:"/api/v1/create_tickets",
+                method:"POST", 
+
+                data:{
+                  number: $(`#${id}ticket_number`).val(), cost: $(`#${id}ticket_cost`).val(), seat_type: id, contract: found[0]
+                },
+              success:function() {
+                $('.modal').modal();
+              },
+              error:function(){
+                alert("error");
+              }
+          });
+      });
+    });
+  });
+  </script>
+  <div style='
+      color: #fff;
+      width: 175px; 
+      heigth: 60px; 
+      cursor: pointer; 
+      margin: 10px;
+      margin-left: 0px;
+      text-align: center; 
+      font-size: 14px;
+      background: #79aec8;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;' id='get_event_places'> Просмотреть типы мест </div>
+  <div id="tickets_panel">
+  </div>
+{% endblock after_related_objects  %}
