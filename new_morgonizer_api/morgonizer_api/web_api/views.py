@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from web_api.serializers import EventPlaceDetailSerializer, EventPlaceListSerializer, EventPlaceSeatTypeDetailSerializer
-from web_api.models import EventPlace, EventPlaceSeatType
-
+from web_api.serializers import *
+from web_api.models import EventPlace, EventPlaceSeatType, Contract, Ticket
 
 class EventPlaceCreateView(generics.CreateAPIView):
     serializer_class = EventPlaceDetailSerializer
@@ -26,14 +25,24 @@ class EventPlaceSeatTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EventPlaceSeatTypeDetailSerializer
     queryset = EventPlaceSeatType.objects.all()
 
-"""
-from rest_framework.response import Response
-from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
-renderer_classes = (TemplateHTMLRenderer, JSONRenderer)
+class ContractListView(generics.ListAPIView):
+    serializer_class = ContractListSerializer
+    queryset = Contract.objects.all()
 
-    def get(self, request, *args, **kwargs):
-        if request.accepted_renderer.format == 'html':
-            return Response({'EventPlace': self.object}, template_name='event_place_detail.html')
-        else:
-            return Response({'EventPlace': self.queryset.get(id=1)}) """
 
+class ContractCreateView(generics.CreateAPIView):
+    serializer_class = ContractDetailSerializer
+
+
+class ContractDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ContractDetailSerializer
+    queryset = Contract.objects.all()
+
+
+class TicketCreateView(generics.CreateAPIView):
+    serializer_class = TicketDetailSerializer
+
+
+class TicketDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TicketDetailSerializer
+    queryset = Ticket.objects.all()
