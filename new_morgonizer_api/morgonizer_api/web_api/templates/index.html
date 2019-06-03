@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static "web_api/css/mainpage.css" %}" />
+    <meta charset="UTF-8" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="nav-menu">
+        <form action="/search" method="GET">
+          {% csrf_token %}
+          <input
+            type="text"
+            class="controls"
+            id="search-box"
+            placeholder="Площадка, ивент..."
+            name="search"
+          />
+          <button class="controls" id="search-button">🔍</button>
+        </form>
+        <a class="controls" href="/">
+          Главная
+        </a>
+        <a class="controls" href="/event_place">
+          Площадки
+        </a>
+        <a class="controls" href="/return_form">
+          Вернуть билет
+        </a>
+        <a class="controls" href="/admin" id="sign">
+          Войти
+        </a>
+      </nav>
+    </header>
+
+    <div class="main">
+      <div class="container-row">
+        <h3 class="title">
+          <div>
+            Концерты и события:
+          </div>
+        </h3>
+      </div>
+
+<div class="container-row" id="fav">
+<div class="slideshow-container">
+      {%for contract in latest_contracts_list%}
+      <div class='mySlides'>
+        <div class="event-card" id="fav" onclick="location.href='/event/{{contract.id}}';">
+          <div
+            class="event-card-cover"
+            style="background-image: url({{contract.event_cover}});"
+          ></div>
+          <div class="event-card-info">
+            <b class="card-info-title">{{contract.event_title}}</b>
+            <div class="card-info-date">{{contract.event_date}}</div>
+            <div class="card-info-venue">{{contract.event_place.name}}</div>
+          </div>
+        </div>
+      </div>
+      {%endfor%}
+  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+  <a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+<br>
+
+<div style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span> 
+  <span class="dot" onclick="currentSlide(2)"></span> 
+  <span class="dot" onclick="currentSlide(3)"></span> 
+  <span class="dot" onclick="currentSlide(4)"></span> 
+  <span class="dot" onclick="currentSlide(5)"></span> 
+</div>
+<script>
+var slideIndex = 1;
+showSlides(slideIndex);
+
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1} 
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none"; 
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block"; 
+  dots[slideIndex-1].className += " active";
+}
+</script>
+      </div>
+      <div class="container-row">
+        {%for contract in latest_contracts_list%}
+        <div class="event-card" onclick="location.href='/event/{{contract.id}}';">
+          <div
+            class="event-card-cover"
+            style="background-image: url({{contract.event_cover}});"
+          ></div>
+          <div class="event-card-info">
+            <b class="card-info-title">{{contract.event_title}}</b>
+            <div class="card-info-date">{{contract.event_date}}</div>
+            <div class="card-info-venue">{{contract.event_place.name}}</div>
+          </div>
+        </div>
+        {%endfor%}
+    </div>
+    <footer>
+      <a class="controls">
+        Свяжись с нами
+      </a>
+    </footer>
+  </body>
+</html>
