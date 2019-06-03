@@ -1,0 +1,28 @@
+<head>
+  {% load static %}
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{% static "web_api/css/mainpage.css" %}" />
+  <meta charset="UTF-8" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans"
+    rel="stylesheet"
+  />
+</head>
+<div class="container-row">
+  <div class="event-place-card" id='form' style='height: 250px;'>
+    <div class="event-place-card-info">Вернуть билет: </div>
+        <div class='event-place-card-info' style='font-size: 12px;'>      Номер билета выглядит так: #123-456
+      <br>
+      В форму нужно ввести число (в нашем примере 123) между # и -</div>
+    <form method="POST" action="/return_ticket/">
+      {% csrf_token %}
+      <label class='ticket_inputs' for='ticket_id'>Номер билета: </label>
+      <input class='ticket_inputs' type='text' name='ticket_id'>
+      <br>
+      <label class='ticket_inputs' for='email'>Email, который вы указали: </label>
+      <input class='ticket_inputs' type='text' name='email'>
+      <br>
+      <button class='buy_button' type='submit'>Вернуть</button>
+    </form>
+  </div>
+</div>

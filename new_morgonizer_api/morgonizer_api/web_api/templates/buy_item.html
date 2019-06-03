@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static "web_api/css/mainpage.css" %}" />
+    <meta charset="UTF-8" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="nav-menu">
+        <form action="/search" method="GET">
+          {% csrf_token %}
+          <input
+            type="text"
+            class="controls"
+            id="search-box"
+            placeholder="Площадка, ивент..."
+            name="search"
+          />
+          <button class="controls" id="search-button">🔍</button>
+        </form>
+        <a class="controls" href="/">
+          Главная
+        </a>
+        <a class="controls" href="/event_place">
+          Площадки
+        </a>
+        <a class="controls" href="/admin" id="sign">
+          Войти
+        </a>
+      </nav>
+    </header>
+
+    <div class="main">
+      <div class="container-row">
+        <h3 class="title">
+          <div>
+            {{contract.event_title}}
+          </div>
+        </h3>
+      </div>
+      <div class="container-row" id="fav">
+        <div class="event-card" id="fav">
+          <div
+            class="event-card-cover"
+            style="background-image: url({{contract.event_cover}});"
+          ></div>
+          <div class="event-card-info">
+            <b class="card-info-title">{{contract.event_title}}</b>
+            <div class="card-info-date">{{contract.event_date}}</div>
+            <div class="card-info-venue">{{contract.event_place}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="container-row">
+        <div class="event-place-card" id='form'>
+          <div class="event-place-card-info">Тип места: {{seat_type.name}}</div>
+          <form method="POST" action="/ticket_bought/">
+          {% csrf_token %}
+          <input type='hidden' name='ticket_id' value='{{ticket.id}}'>
+          <label class='ticket_inputs' for='email'>Ваш email: </label>
+          <input class='ticket_inputs' type='text' name='email'>
+          <br>
+          <label class='ticket_inputs' for='phone'>Ваш моб. телефон: </label>
+          <input class='ticket_inputs' type='text' name='phone'></div>
+          <div class="event-place-card-info">
+            <button class='buy_button' type='submit'>Купить</button>
+          </div>
+          </form>
+    </div>
+    <div class="container-row">
+    </div>
+    <footer>
+      <a class="controls">
+        Свяжись с нами
+      </a>
+    </footer>
+  </body>
+</html>

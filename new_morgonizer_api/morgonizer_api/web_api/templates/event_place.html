@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static "web_api/css/mainpage.css" %}" />
+    <meta charset="UTF-8" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="nav-menu">
+        <form action="/search" method="GET">
+          {% csrf_token %}
+          <input
+            type="text"
+            class="controls"
+            id="search-box"
+            placeholder="Площадка, ивент..."
+            name="search"
+          />
+          <button class="controls" id="search-button">🔍</button>
+        </form>
+        <a class="controls" href="/">
+          Главная
+        </a>
+        <a class="controls" href="/admin" id="sign">
+          Войти
+        </a>
+      </nav>
+    </header>
+
+    <div class="main">
+      <div class="container-row">
+        <h3 class="title">
+          <div>
+            Площадки:
+          </div>
+        </h3>
+      </div>
+      <div class="container-row">
+        {%for event_place in latest_event_place_list%}
+        <div class="event-place-card">
+          <div class="event-place-card-info">Название: {{event_place.name}}</div>
+          <div class="event-place-card-info">Адрес: {{event_place.adress}}</div>
+          <div class="event-place-card-info">Тип: 
+          {%if event_place.open_air == True %}
+          Открытая
+          {%else%}
+          Закрытая
+          {%endif%}
+          </div>
+        </div>
+        {%endfor%}
+    </div>
+    <footer>
+      <a class="controls">
+        Свяжись с нами
+      </a>
+    </footer>
+  </body>
+</html>
