@@ -20,4 +20,5 @@ urlpatterns = [
     path(api_prefix + 'get_seat_types/<int:event_place_id>', views.event_place_seat_type),
     path(api_prefix + 'create_tickets', views.create_tickets),
     path('', views.index),
+    path('event_place/', views.event_place),
 ]
