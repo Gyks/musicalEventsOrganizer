@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static "web_api/css/mainpage.css" %}" />
+    <meta charset="UTF-8" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="nav-menu">
+        <form action="/search" method="GET">
+          {% csrf_token %}
+          <input
+            type="text"
+            class="controls"
+            id="search-box"
+            placeholder="Площадка, ивент..."
+            name="search"
+          />
+          <button class="controls" id="search-button">🔍</button>
+        </form>
+        <a class="controls" href="/">
+          Главная
+        </a>
+        <a class="controls" href="/event_place">
+          Площадки
+        </a>
+        <a class="controls" href="/admin" id="sign">
+          Войти
+        </a>
+      </nav>
+    </header>
+
+    <div class="main">
+      <div class="container-row">
+        <h3 class="title">
+          <div>
+            {{contract.event_title}}
+          </div>
+        </h3>
+      </div>
+      <div class="container-row" id="fav">
+        <div class="event-card" id="fav">
+          <div
+            class="event-card-cover"
+            style="background-image: url({{contract.event_cover}});"
+          ></div>
+          <div class="event-card-info">
+            <b class="card-info-title">{{contract.event_title}}</b>
+            <div class="card-info-date">{{contract.event_date}}</div>
+            <div class="card-info-venue">{{contract.event_place}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="container-row">
+      {% if ticket_seat_type %}
+      {% for ticket_cost, seat_type, tickets_count in ticket_seat_type %}
+        <div class="event-place-card">
+          <div class="event-place-card-info">Тип места: {{seat_type.name}}</div>
+          <div class="event-place-card-info">Осталось: {{tickets_count}}</div>
+          <div class="event-place-card-info">Стоимость: {{ticket_cost}}</div>
+          <a class="buy_button" href='/buy_item?contract={{contract.id}}&seat_type={{seat_type.id}}'>Купить билет</a>
+        </div>
+      {% endfor %}
+      {% else %}
+          <h3 class="title" style="font-size: 16px;">
+            Билеты скоро появятся!
+          </h3>
+      {% endif %}
+    </div>
+    <div class="container-row">
+
+    </div>
+    <footer>
+      <a class="controls">
+        Свяжись с нами
+      </a>
+    </footer>
+  </body>
+</html>

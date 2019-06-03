@@ -21,4 +21,5 @@ urlpatterns = [
     path(api_prefix + 'create_tickets', views.create_tickets),
     path('', views.index),
     path('event_place/', views.event_place),
+    path('event/<int:event_id>', views.event),
 ]
