@@ -1,0 +1,20 @@
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<meta charset="UTF-8">
+</head>
+
+
+Нажмите ctrl+P для печати
+<div id="content" style='border: 1px solid black; width: 800px; height: 300px;'>
+<div id="qrcode" style="
+  position: relative; margin: 5px;float: right; display: inline-block;">
+</div>
+<h1>Билет #{{ticket.id}}-{{ticket.contract.id}}{{ticket.eventPlace_seatType.id}}
+<h2>Билет на {{ticket.contract.event_title}} <br> {{ticket.contract.event_date}}</h2>
+</div>
+
+<script>
+$('#qrcode').qrcode("#{{ticket.id}}-{{ticket.contract.id}}{{ticket.eventPlace_seatType.id}}");
+</script>

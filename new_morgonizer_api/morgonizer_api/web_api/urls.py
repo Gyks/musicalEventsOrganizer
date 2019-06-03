@@ -22,4 +22,8 @@ urlpatterns = [
     path('', views.index),
     path('event_place/', views.event_place),
     path('event/<int:event_id>', views.event),
+    path('buy_item/', views.buy_item),
+    path('ticket_bought/', views.ticket),
+    path('return_form/', views.return_form),
+    path('return_ticket/', views.return_ticket),
 ]

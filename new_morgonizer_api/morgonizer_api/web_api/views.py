@@ -85,3 +85,55 @@ def event(request, event_id):
         'ticket_seat_type': ticket_seat_type,
         }
     return render(request, 'event.html', context)
+
+
+def buy_item(request):
+    if request.method == "GET":
+        seat_type = get_object_or_404(EventPlaceSeatType, id=request.GET['seat_type'])
+        contract = get_object_or_404(Contract, id=request.GET['contract'])
+        ticket = Ticket.objects.filter(eventPlace_seatType=seat_type.id, contract=contract.id, purchased=False)[0]
+        context = {'seat_type': seat_type, 'contract': contract, 'ticket': ticket}
+        return render(request, 'buy_item.html', context)
+    else:
+        return JsonResponse({'error':'incorrect request'})
+
+
+def ticket(request):
+    if request.method == "POST":
+        email = request.POST['email']
+        phone = request.POST['phone']
+        ticket = get_object_or_404(Ticket, id=request.POST['ticket_id'])
+        if ticket.purchased == True:
+            return HttpResponse("Этот билет уже куплен.")
+        ticket.buyer_email = email
+        ticket.buyer_mobile = phone
+        ticket.purchased = True
+        ticket.save()
+        context = {
+            'email': email,
+            'phone': phone,
+            'ticket': ticket,
+        }
+        return render(request, 'ticket.html', context)
+
+
+def return_ticket(request):
+    if request.method == "POST":
+        # ticket = get_object_or_404(Ticket, id=)
+        try:
+            ticket = Ticket.objects.get(pk=request.POST['ticket_id'])
+        except:
+            return HttpResponse("Неккоректный номер билета или email")
+        email = request.POST['email']
+        if email == ticket.buyer_email:
+            ticket.buyer_email = ""
+            ticket.buyer_mobile = ""
+            ticket.purchased = False
+            ticket.save()
+            return HttpResponse("<h1>Успешный возврат билета.</h1>")
+    return HttpResponse("Неккоректный номер билета или email")
+
+
+def return_form(request):
+    context = {}
+    return render(request, 'return_form.html', context)
