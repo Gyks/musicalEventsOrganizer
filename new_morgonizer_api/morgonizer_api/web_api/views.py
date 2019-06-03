@@ -56,3 +56,9 @@ def index(request):
     latest_contracts_list = Contract.objects.all().order_by('-created')[0:5]
     context = {'latest_contracts_list': latest_contracts_list}
     return render(request, 'index.html', context)
+
+
+def event_place(request):
+    latest_event_place_list = EventPlace.objects.all()[0:5]
+    context = {'latest_event_place_list': latest_event_place_list}
+    return render(request, 'event_place.html', context)
