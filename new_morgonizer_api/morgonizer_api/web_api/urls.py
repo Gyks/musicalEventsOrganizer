@@ -2,6 +2,10 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 from web_api.views import *
+from rest_framework_swagger.views import get_swagger_view
+
+
+schema_view = get_swagger_view(title="morgonizer docs/swagger")
 
 
 api_prefix = 'api/v1/'
@@ -21,6 +25,7 @@ urlpatterns = [
     path(api_prefix + 'create_tickets', views.create_tickets),
     path('', views.index),
     path('event_place/', views.event_place),
+    path('api_docs/', schema_view),
     path('event/<int:event_id>', views.event),
     path('buy_item/', views.buy_item),
     path('ticket_bought/', views.ticket),

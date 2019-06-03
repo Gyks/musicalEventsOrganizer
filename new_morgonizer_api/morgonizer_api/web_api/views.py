@@ -137,3 +137,18 @@ def return_ticket(request):
 def return_form(request):
     context = {}
     return render(request, 'return_form.html', context)
+
+
+def search(request):
+    query = request.GET['search']
+    if query:
+        event_places = EventPlace.objects.filter(name__icontains=query)
+        contracts = Contract.objects.filter(event_title__icontains=query)
+    else:
+        event_places = contracts = []
+    context = { 
+        'query': query, 
+        'event_places': event_places, 
+        'contracts': contracts,
+    }
+    return render(request, 'search.html', context)
